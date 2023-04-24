@@ -141,6 +141,26 @@
     font-weight: bold;
 }
 
+@media only screen and (max-width: 900px) {
+    .benefits-content-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      place-items: center;
+    }
+  
+    .benefits-content-list-element {
+      width: 100%;
+    }
+  
+    .benefits-content-list-icon > img {
+      transition: all .2s ease-in-out;
+    }
+  
+    .benefits-content-list-icon > img:hover {
+      transform: scale(1.2);
+    }
+  }
+
 /* Join page - join component */
 
 .join-wrapper {
