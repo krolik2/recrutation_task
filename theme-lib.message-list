@@ -32,14 +32,32 @@ to change this value, but since we hard code it to 30, the conditional statement
 <#assign whereClause = label_query />
  
 <#switch sorting>
+   <#case "recent">
+   <#-- here we can sort post list by post time descending so we get newest post first-->
+      <#assign orderClause = "ORDER BY post_time DESC " />
+   <#break>
     <#case "kudos">
       <#assign orderClause = "ORDER BY kudos.sum(weight) DESC " />
+   <#break>
+      <#-- here we can sort posts by kudos in ascending order to get ones with lowest ammount first -->
+    <#case "kudosLowest">
+      <#assign orderClause = "ORDER BY kudos.sum(weight) ASC" />
    <#break>
    <#case "views">
        <#assign orderClause = "ORDER BY metrics.views DESC " />
    <#break>
    <#case "replies">
        <#assign orderClause = "ORDER BY replies.count(*) DESC " />
+   <#break>
+   <#-- here we can sort posts by replies in ascending order to get ones with 0 replies first -->
+   <#case "unanswered">
+       <#assign orderClause = "ORDER BY replies.count(*) ASC " />
+   <#break>
+   <#case "unsolved">
+    <#-- here we need to filter out solved questions, so I'm assuming "conversation.solved" is a bolean
+    and we sort if with default sort order as it's not specified in the task -->
+       <#assign whereClause = whereClause + "WHERE conversation.solved = false " />
+       <#assign orderClause = "ORDER BY conversation.last_post_time DESC " />
    <#break>
    <#default>
        <#assign orderClause = "ORDER BY conversation.last_post_time DESC " />
@@ -69,7 +87,13 @@ to change this value, but since we hard code it to 30, the conditional statement
        <header>
            <div class="custom-message-list-header-left">
                <select id="community-activity-sorted-by">
-                   <option value="recent" <#if sorting == 'recent'>selected</#if>>${text.format("theme-lib.community-activity.recent")}</option>
+                <#-- here we have select tag so we need to add new options for sorting below -->
+                   <option value="post time descending" <#if sorting == 'postTimeDESC'>selected</#if>>${text.format("theme-lib.community-activity.postTimeDESC")}</option>
+                   <option value="kudos lowest" <#if sorting == 'kudosLowest'>selected</#if>>${text.format("theme-lib.community-activity.kudosLowest")}</option>
+                   <option value="unanswered" <#if sorting == 'unanswered'>selected</#if>>${text.format("theme-lib.community-activity.unanswered")}</option>
+                   <option value="unsolved" <#if sorting == 'unsolved'>selected</#if>>${text.format("theme-lib.community-activity.unsolved")}</option>
+                <#-- i think we need to add selected attribute to recent option as it is the default sorting -->
+                   <option value="recent" selected <#if sorting == 'recent'>selected</#if>>${text.format("theme-lib.community-activity.recent")}</option>
                    <option value="views" <#if sorting == 'views'>selected</#if>>${text.format("theme-lib.community-activity.views")}</option>
                    <option value="replies" <#if sorting == 'replies'>selected</#if>>${text.format("theme-lib.community-activity.replies")}</option>
                    <option value="kudos" <#if sorting == 'kudos'>selected</#if>>${text.format("theme-lib.community-activity.kudos")}</option>
