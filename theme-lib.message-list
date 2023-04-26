@@ -146,7 +146,11 @@ to change this value, but since we hard code it to 30, the conditional statement
        <#assign msg_status_txt = "theme-lib.general.thread-floated" />
    </#if>
    <#if msg.conversation.solved>
-       <#assign solved = "custom-thread-solved" />
+      <#-- So here in line 150 we can change class for solved threds, for example
+   we can use name "conversation", which would be the same as a key of the object that we check above in line 149.
+   We should probably also change class name for "msg_status_icon" as it refers to the same class as "solved" variable,
+   but since it's not used anywhere in this code example I guess it doesn't matter  -->
+       <#assign solved = "custom-conversation-solved" />
        <#assign msg_status_icon = "custom-thread-solved" />
        <#assign msg_status_txt = "theme-lib.general.thread-solved" />
    </#if>
