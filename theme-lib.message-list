@@ -7,13 +7,10 @@
 <#assign sorting = http.request.parameters.name.get("sort", "") />
  
 <#-- page size -->
-<#assign pageSize = coreNode.settings.name.get("layout.messages_per_page_linear", "10")?number />
-<#if user.registered>
-   <#assign pageSizeUser = settings.name.get("layout.messages_per_page_linear") />
-   <#if pageSizeUser?number != pageSize?number>
-       <#assign pageSize = pageSizeUser />
-   </#if>
-</#if>
+<#-- here we can assign "pageSize" variable to 30,
+It seems that the rest of this code section allowed registered users 
+to change this value, but since we hard code it to 30, the conditional statement below is redundant, same as type convertion (with ?number), so I've removed it  -->
+<#assign pageSize = 30 />
  
 <#if webuisupport.path.parameters.name.get("label-name")??>
    <#assign label = webuisupport.path.parameters.name.get("label-name").getText() />
@@ -35,8 +32,8 @@
 <#assign whereClause = label_query />
  
 <#switch sorting>
-   <#case "kudos">
-       <#assign orderClause = "ORDER BY kudos.sum(weight) DESC " />
+    <#case "kudos">
+      <#assign orderClause = "ORDER BY kudos.sum(weight) DESC " />
    <#break>
    <#case "views">
        <#assign orderClause = "ORDER BY metrics.views DESC " />
